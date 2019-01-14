@@ -1,37 +1,66 @@
 'use strict'
 
-var ballBorderWidth = 50;
+var ballRadius = 50;
 
 function newBall() {
+    var field = document.querySelector('.field');
     var ball = document.createElement('div');
     ball.classList.add('ball');
-    ball.style.borderWidth = ballBorderWidth + 'px';
-    ball.style.bottom = 0;
-    ball.style.left = Math.random() * (parseInt(window.innerWidth) - ballBorderWidth * 2) + 'px';
-    document.body.appendChild(ball);
+    ball.style.borderWidth = ballRadius + 'px';
+    ball.style.bottom = -(ballRadius * 2) + 'px';
+    ball.style.left = Math.random() * (parseInt(window.innerWidth) - ballRadius * 2) + 'px';
+    field.appendChild(ball);
 
-    var pos = 0;
-    var posMax = parseInt(window.innerHeight);
+    var yPos = -ball.offsetHeight;
+    var yPosMax = parseInt(window.innerHeight);
+    var fps = 60;
+    var stepFloatUp = 3;
 
-    var timer = setInterval(move, 10);
+
+
     function move() {
-        if (pos == posMax) {
-            clearInterval(timer);
-            document.body.removeChild(ball);
-            newBall();
+        if (yPos < yPosMax) {
+            requestAnimationFrame(move);
+            yPos += stepFloatUp;
+            ball.style.bottom = yPos + 'px';          
         } else {
-            pos++;
-            ball.style.bottom = pos + 'px';
+            removeBall();
+            newBall();
         }
     }
 
+    move();
+
+    
+
+    function removeBall() {
+        field.removeChild(ball);
+    }
+
     ball.addEventListener('click', function() {
-        document.body.removeChild(ball);
+        removeBall();
         newBall();
-    })
+    });
+
+
+    // function move() {
+    //     if (yPos < yPosMax) {
+    //         setTimeout(function() {
+    //             requestAnimationFrame(move);
+    //             yPos += stepFloatUp;
+    //             ball.style.bottom = yPos + 'px';
+    //         }, 1000 / fps);
+    //     } else {
+    //         removeBall();
+    //         newBall();
+    //     }
+    // }
+
 }
 
 newBall();
+
+
 
 // TODO:
 // - fix error: clean up interval when baloon destroyed by click

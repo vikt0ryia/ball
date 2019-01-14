@@ -4,10 +4,18 @@ body {
 	background-color: aqua;
 }
 
+.header {
+	height: 70px;
+	background-color: grey;
+	position: relative;
+	z-index: 2;
+}
+
 .ball {
 	display: inline-block;
 
 	position: absolute;
 	border: 50px solid greenyellow;
 	border-radius: 50%;
+	z-index: 1;
 }
