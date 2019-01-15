@@ -12,18 +12,19 @@ function newBall() {
     field.appendChild(ball);
 
     var yPos = -ball.offsetHeight;
-    var yPosMax = parseInt(window.innerHeight);
+    var yPosMax = parseInt(field.offsetHeight);
     var fps = 60;
     var stepFloatUp = 3;
 
-
+    var requestID;
 
     function move() {
-        if (yPos < yPosMax) {
-            requestAnimationFrame(move);
+        if (yPos <= yPosMax) {
+            requestID = requestAnimationFrame(move);
             yPos += stepFloatUp;
             ball.style.bottom = yPos + 'px';          
         } else {
+            cancelAnimationFrame(requestID);
             removeBall();
             newBall();
         }
@@ -31,13 +32,12 @@ function newBall() {
 
     move();
 
-    
-
     function removeBall() {
         field.removeChild(ball);
     }
 
     ball.addEventListener('click', function() {
+        cancelAnimationFrame(requestID);
         removeBall();
         newBall();
     });
