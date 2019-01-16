@@ -1,64 +1,74 @@
-'use strict'
+'use strict';
 
-var ballRadius = 50;
+(function() {
+    var life = 3;
+    var score = 0;
+    var counter = document.querySelector('.score__counter');
+    var buttonStart = document.querySelector('.button');
+    var hearts = document.querySelectorAll('.heart');
 
-function newBall() {
-    var field = document.querySelector('.field');
-    var ball = document.createElement('div');
-    ball.classList.add('ball');
-    ball.style.borderWidth = ballRadius + 'px';
-    ball.style.bottom = -(ballRadius * 2) + 'px';
-    ball.style.left = Math.random() * (parseInt(window.innerWidth) - ballRadius * 2) + 'px';
-    field.appendChild(ball);
+    counter.innerHTML = score;
 
-    var yPos = -ball.offsetHeight;
-    var yPosMax = parseInt(field.offsetHeight);
-    var fps = 60;
-    var stepFloatUp = 3;
-
-    var requestID;
-
-    function move() {
-        if (yPos <= yPosMax) {
-            requestID = requestAnimationFrame(move);
-            yPos += stepFloatUp;
-            ball.style.bottom = yPos + 'px';          
-        } else {
-            cancelAnimationFrame(requestID);
-            removeBall();
-            newBall();
-        }
-    }
-
-    move();
-
-    function removeBall() {
-        field.removeChild(ball);
-    }
-
-    ball.addEventListener('click', function() {
-        cancelAnimationFrame(requestID);
-        removeBall();
+    buttonStart.addEventListener('click', function() {
+        buttonStart.style.display = 'none';
         newBall();
     });
 
+    function newBall() {
+        var field = document.querySelector('.field');
+        var ball = document.createElement('div');
+        ball.classList.add('ball');
+        var ballWidth = 150;
+        
+        ball.style.bottom = -ballWidth + 'px';
+        ball.style.left = Math.random() * (window.innerWidth - ballWidth) + 'px';
+        field.appendChild(ball);
 
-    // function move() {
-    //     if (yPos < yPosMax) {
-    //         setTimeout(function() {
-    //             requestAnimationFrame(move);
-    //             yPos += stepFloatUp;
-    //             ball.style.bottom = yPos + 'px';
-    //         }, 1000 / fps);
-    //     } else {
-    //         removeBall();
-    //         newBall();
-    //     }
-    // }
+        var yPos = -ballWidth;
+        var yPosMax = parseInt(field.offsetHeight);
+        var stepFloatUp = 3;
 
-}
+        var requestID;
 
-newBall();
+        function move() {
+            if (life) {
+                if (yPos <= yPosMax) {
+                    requestID = requestAnimationFrame(move);
+                    yPos += stepFloatUp;
+                    ball.style.bottom = yPos + 'px';          
+                } else {
+                    cancelAnimationFrame(requestID);
+                    removeBall();
+                    decreaseLife();
+                    newBall();
+                }
+            } else {
+                location.reload();
+            }           
+        }
+
+        move();
+
+        function decreaseLife() {
+            life--;
+            hearts[life].style.fill = '#333333';
+        }
+
+        function removeBall() {
+            field.removeChild(ball);
+        }
+
+        ball.addEventListener('click', function() {
+            score++;
+            counter.innerHTML = score;
+            cancelAnimationFrame(requestID);
+            removeBall();
+            newBall();
+            console.log(score);
+        });
+    }
+
+})();
 
 
 
