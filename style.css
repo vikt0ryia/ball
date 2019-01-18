@@ -34,6 +34,8 @@ body {
 }
 
 .field {
+	display: flex;
+	flex-direction: column;
 	height: 100vh;
 	overflow: hidden;
 	background-image: url("img/background.jpg");
@@ -69,13 +71,8 @@ body {
 }
 
 .button {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	-webkit-transform: translate(-50%, -50%);
-	-ms-transform: translate(-50%, -50%);
-	-o-transform: translate(-50%, -50%);
-	transform: translate(-50%, -50%);
+	margin: auto;
+	display: inline-block;
 	padding: 30px;
 	text-align: center;
 	color: #01A796;
@@ -83,7 +80,6 @@ body {
 	font-size: 50px;
 	font-weight: 600;
 	cursor: pointer;
-	display: inline-block;
 
 	background-color: transparent;
 	border: 3px solid #01A796;
@@ -97,4 +93,28 @@ body {
 	box-shadow: 0 0 10px 0 #01A796 inset, 0 0 20px 2px #01A796;
 	border: 3px solid #01A796;
 	outline: none;
+}
+
+.game-over {
+	display: none;
+	padding-top: 10%;
+	text-align: center;
+}
+
+.game-over__title {	
+	margin: 0;
+	margin-bottom: 20px;
+	color: #01A796;
+	text-transform: uppercase;
+	font-size: 50px;
+	font-weight: 600;
+}
+
+.game-over__score span,
+.game-over__best-score span {
+	color: #01A796;
+}
+
+.game-over__best-score span {
+	color: #01A796;
 }

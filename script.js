@@ -1,16 +1,26 @@
 'use strict';
 
 (function() {
-    var life = 3;
-    var score = 0;
+    var life;
+    var score;
+    var stepFloatUp;
     var counter = document.querySelector('.score__counter');
     var buttonStart = document.querySelector('.button');
     var hearts = document.querySelectorAll('.heart');
-
-    counter.innerHTML = score;
+    var gameOver = document.querySelector('.game-over');
+    var finalScore = document.querySelector('.game-over__score span');
+    var bestScore = document.querySelector('.game-over__best-score span');
 
     buttonStart.addEventListener('click', function() {
         buttonStart.style.display = 'none';
+        gameOver.style.display = 'none';
+        life = 3;
+        score = 0;
+        stepFloatUp = 3;
+        counter.innerHTML = score;
+        hearts.forEach(function (item) {
+            item.style.fill = 'red';
+        });
         newBall();
     });
 
@@ -26,7 +36,6 @@
 
         var yPos = -ballWidth;
         var yPosMax = parseInt(field.offsetHeight);
-        var stepFloatUp = 3;
 
         var requestID;
 
@@ -40,10 +49,22 @@
                     cancelAnimationFrame(requestID);
                     removeBall();
                     decreaseLife();
+                    stepFloatUp = 3;
                     newBall();
                 }
             } else {
-                location.reload();
+                cancelAnimationFrame(requestID);
+                removeBall();
+                gameOver.style.display = 'block';
+                finalScore.textContent = score;
+
+                if (!localStorage.getItem('bestScore') || localStorage.getItem('bestScore') < score) {
+                    localStorage.setItem('bestScore', score);
+                } 
+              
+                bestScore.textContent = localStorage.getItem('bestScore');
+                buttonStart.style.display = 'inline-block';
+                buttonStart.style.marginTop = '40px';
             }           
         }
 
@@ -58,29 +79,14 @@
             field.removeChild(ball);
         }
 
-        ball.addEventListener('click', function() {
+        ball.addEventListener('mousedown', function() {
             score++;
             counter.innerHTML = score;
+            stepFloatUp += 0.2;
             cancelAnimationFrame(requestID);
             removeBall();
             newBall();
-            console.log(score);
         });
     }
 
 })();
-
-
-
-// TODO:
-// - fix error: clean up interval when baloon destroyed by click
-// - start button
-// - use mousedown event intead of click for baloon shooting
-// - each new baloon moves fater
-// - add destroyed baloons counter
-// - allow ganer to make 3 mistakes, not 1
-// - add baloon destroy animation
-// - add decrease lives animation
-// - add "game over" scene
-// - store best result in local storage
-// - host web app in github pages or equivalent
