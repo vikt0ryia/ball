@@ -29,27 +29,37 @@
         var ball = document.createElement('div');
         ball.classList.add('ball');
         var ballWidth = 150;
-        
+
         ball.style.bottom = -ballWidth + 'px';
         ball.style.left = Math.random() * (window.innerWidth - ballWidth) + 'px';
         field.appendChild(ball);
 
         var yPos = -ballWidth;
-        var yPosMax = parseInt(field.offsetHeight);
+        var yPosMax = parseInt(field.offsetHeight) - ballWidth;
 
         var requestID;
+
+        move();
+
+        ball.addEventListener('mousedown', function() {
+            score++;
+            counter.innerHTML = score;
+            stepFloatUp += 0.2;
+            cancelAnimationFrame(requestID);
+            removeBall();
+            newBall();
+        });
 
         function move() {
             if (life) {
                 if (yPos <= yPosMax) {
                     requestID = requestAnimationFrame(move);
                     yPos += stepFloatUp;
-                    ball.style.bottom = yPos + 'px';          
+                    ball.style.bottom = yPos + 'px';
                 } else {
                     cancelAnimationFrame(requestID);
                     removeBall();
                     decreaseLife();
-                    stepFloatUp = 3;
                     newBall();
                 }
             } else {
@@ -61,14 +71,12 @@
                 if (!localStorage.getItem('bestScore') || localStorage.getItem('bestScore') < score) {
                     localStorage.setItem('bestScore', score);
                 } 
-              
+
                 bestScore.textContent = localStorage.getItem('bestScore');
                 buttonStart.style.display = 'inline-block';
                 buttonStart.style.marginTop = '40px';
-            }           
+            }
         }
-
-        move();
 
         function decreaseLife() {
             life--;
@@ -79,14 +87,6 @@
             field.removeChild(ball);
         }
 
-        ball.addEventListener('mousedown', function() {
-            score++;
-            counter.innerHTML = score;
-            stepFloatUp += 0.2;
-            cancelAnimationFrame(requestID);
-            removeBall();
-            newBall();
-        });
     }
 
 })();
